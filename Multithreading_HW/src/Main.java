@@ -5,14 +5,15 @@ public class Main {
     public static void main(String[] args) {
 
         StringBuilder str = new StringBuilder();
-        ReentrantLock locker = new ReentrantLock();
+//        ReentrantLock locker = new ReentrantLock();
+        Peterson peterson = new Peterson();
 
         Thread t1 = new Thread(new Runnable()
         {
 
             @Override
             public void run() {
-                locker.lock();
+                peterson.lock(0);
                 try {
                     for (int i = 0; i < 1000; i++)
                         str.append("Thread1 here ");
@@ -20,7 +21,7 @@ public class Main {
                     throw e;
                 }
                 finally {
-                    locker.unlock();
+                    peterson.unlock(0);
                 }
             }
         });
@@ -30,7 +31,7 @@ public class Main {
 
             @Override
             public void run() {
-                locker.lock();
+                peterson.lock(1);
                 try {
                     for (int i = 0; i < 1000; i++)
                         str.append("Thread2 here ");
@@ -38,7 +39,7 @@ public class Main {
                     throw e;
                 }
                 finally {
-                    locker.unlock();
+                    peterson.unlock(1);
                 }
             }
         });
