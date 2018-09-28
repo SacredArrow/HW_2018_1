@@ -8,37 +8,35 @@ public class Main {
 //        ReentrantLock locker = new ReentrantLock();
         Peterson peterson = new Peterson();
 
-        Thread t1 = new Thread(new Runnable()
-        {
+        Thread t1 = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 peterson.lock(0);
                 try {
-                    for (int i = 0; i < 1000; i++)
+                    for (int i = 0; i < 1000; i++) {
                         str.append("Thread1 here ");
+                    }
                 } catch (Exception e) {
                     throw e;
-                }
-                finally {
+                } finally {
                     peterson.unlock(0);
                 }
             }
         });
 
-        Thread t2 = new Thread(new Runnable()
-        {
+        Thread t2 = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 peterson.lock(1);
                 try {
-                    for (int i = 0; i < 1000; i++)
+                    for (int i = 0; i < 1000; i++) {
                         str.append("Thread2 here ");
+                    }
                 } catch (Exception e) {
                     throw e;
-                }
-                finally {
+                } finally {
                     peterson.unlock(1);
                 }
             }
