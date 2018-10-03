@@ -15,7 +15,7 @@ public class Filter {
         this.src = src;
         this.target = new BufferedImage(src.getWidth(), src.getHeight(), src.getType());
     }
-
+    
     public void process(int threadsNumber, Mode mode) throws InterruptedException {
         lineCounter = 0;
         Runnable run = new Runnable() {

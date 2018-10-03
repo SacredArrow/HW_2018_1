@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Main {
 
-    static String file_name = "cat";
+    static String file_name = "wallpaper";
     static String file_format = "jpg";
     static String path = "res/";
 
@@ -18,7 +18,7 @@ public class Main {
 
         Filter filter = new Filter(src);
         try {
-            filter.process(2, Mode.HORIZONTAL_PROCESSING);
+            filter.process(8, Mode.HORIZONTAL_PROCESSING);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
