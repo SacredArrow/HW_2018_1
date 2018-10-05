@@ -6,13 +6,15 @@ public class Main {
 
         StringBuilder str = new StringBuilder();
 //        ReentrantLock locker = new ReentrantLock();
-        Peterson peterson = new Peterson();
+//        Peterson peterson = new Peterson();
+        TASLock tas = new TASLock();
+        TTASLock ttas = new TTASLock();
 
         Thread t1 = new Thread(new Runnable() {
 
             @Override
             public void run() {
-                peterson.lock(0);
+                tas.lock();
                 try {
                     for (int i = 0; i < 1000; i++) {
                         str.append("Thread1 here ");
@@ -20,7 +22,7 @@ public class Main {
                 } catch (Exception e) {
                     throw e;
                 } finally {
-                    peterson.unlock(0);
+                    tas.unlock();
                 }
             }
         });
@@ -29,7 +31,7 @@ public class Main {
 
             @Override
             public void run() {
-                peterson.lock(1);
+                tas.lock();
                 try {
                     for (int i = 0; i < 1000; i++) {
                         str.append("Thread2 here ");
@@ -37,7 +39,7 @@ public class Main {
                 } catch (Exception e) {
                     throw e;
                 } finally {
-                    peterson.unlock(1);
+                    tas.unlock();
                 }
             }
         });
