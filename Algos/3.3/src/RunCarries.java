@@ -39,7 +39,7 @@ public class RunCarries implements Runnable {
             carry_sum = getCarry_sum(carry_sum, carries[i]);
 
         }
-        Main.prefixes.add(carry_sum);
+        Main.prefixes[from/Main.step] = carry_sum;
         synchronized (Main.prefixes) {
             Main.countedPrefixes++;
             if (Main.countedPrefixes == Main.numberOfThreads) {
@@ -62,7 +62,7 @@ public class RunCarries implements Runnable {
         }
 
         if (from != 0) {
-            total = Main.prefixes.get(from / Main.step);
+            total = Main.prefixes[from / Main.step];
         } else {
             total = Carry.N;
         }

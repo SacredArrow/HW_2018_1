@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
     public static int sizeOfANumber = 8;
     public static int numberOfThreads = 4;
-    public static volatile ArrayList<Carry> prefixes;
+    public static volatile Carry[] prefixes;
     static volatile Carry[] carries;
     static volatile int countedPrefixes;
     static int step;
@@ -22,11 +22,12 @@ public class Main {
         int[] num2 = new int[sizeOfANumber];
         carries = new Carry[sizeOfANumber];
         result = new int[sizeOfANumber];
-        prefixes = new ArrayList<>();
+        prefixes = new Carry[numberOfThreads];
         for (int i = 0; i < str1.length(); i++) {
             num1[i] = str1.charAt(i) - '0';
             num2[i] = str2.charAt(i) - '0';
         }
+
 
         for (int i = 0; i < numberOfThreads; i++) {
             step = sizeOfANumber / numberOfThreads;

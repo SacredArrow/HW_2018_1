@@ -23,9 +23,9 @@ public class Tree {
         }
     }
 
-    public void create_tree(ArrayList<Carry> array, int left_bound, int right_bound) {
+    public void create_tree(Carry[] array, int left_bound, int right_bound) {
         if (left_bound == right_bound) {
-            this.value = array.get(left_bound - 1);
+            this.value = array[left_bound - 1];
         } else {
             int middle = left_bound + (right_bound - left_bound + 1) / 2 - 1;
             left = new Tree(left_bound, middle);
@@ -82,7 +82,7 @@ public class Tree {
     public void downsweep(Carry car) {
         value = car;
         if (left_bound == right_bound) {
-            Main.prefixes.set(left_bound - 1, value);
+            Main.prefixes[left_bound - 1] = value;
             return;
         }
         Carry calculated_value = RunCarries.getCarry_sum(value, left.value);
