@@ -1,4 +1,3 @@
-
 public class Tree {
     Tree left;
     Tree right;
@@ -29,8 +28,8 @@ public class Tree {
             int middle = left_bound + (right_bound - left_bound + 1) / 2 - 1;
             left = new Tree(left_bound, middle);
             right = new Tree(middle + 1, right_bound);
-            Thread t1 = new Thread(() -> left.create_tree( left_bound, middle));
-            Thread t2 = new Thread(() -> right.create_tree( middle + 1, right_bound));
+            Thread t1 = new Thread(() -> left.create_tree(left_bound, middle));
+            Thread t2 = new Thread(() -> right.create_tree(middle + 1, right_bound));
             t1.start();
             t2.start();
             try {
@@ -73,7 +72,7 @@ public class Tree {
                 e.printStackTrace();
             }
 
-            value = run1.return_value+run2.return_value;
+            value = run1.return_value + run2.return_value;
             return value;
         }
     }
@@ -84,7 +83,7 @@ public class Tree {
             Main.prefixes[left_bound - 1] = value;
             return;
         }
-        Integer calculated_value = value+left.value;
+        Integer calculated_value = value + left.value;
         Thread t1 = new Thread(() -> left.downsweep(value));
         Thread t2 = new Thread(() -> right.downsweep(calculated_value));
         t1.start();

@@ -11,9 +11,9 @@ public class Run implements Runnable {
 
     @Override
     public void run() {
-        int sum=0;
-        for (int i=from; i<to;i++){
-            sum+=Main.intArray[i];
+        int sum = 0;
+        for (int i = from; i < to; i++) {
+            sum += Main.intArray[i];
         }
 
         Main.prefixes[number] = sum;
@@ -43,9 +43,8 @@ public class Run implements Runnable {
         }
         Main.intArray[from] = total + Main.intArray[from];
         for (int i = from + 1; i < to; i++) {
-            Main.intArray[i] = Main.intArray[i-1] + Main.intArray[i];
+            Main.intArray[i] = Main.intArray[i - 1] + Main.intArray[i];
         }
-
 
 
     }

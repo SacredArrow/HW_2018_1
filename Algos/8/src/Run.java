@@ -9,6 +9,13 @@ public class Run implements Runnable {
         this.number = number;
     }
 
+    public static Pair sumPairs(Pair p1, Pair p2) {
+        Pair tmp = new Pair(0, 0);
+        tmp.a = p1.a * p2.a;
+        tmp.b = p2.a * p1.b + p2.b;
+        return tmp;
+    }
+
     @Override
     public void run() {
         Pair tmp = Main.pairs[from];
@@ -18,12 +25,5 @@ public class Run implements Runnable {
         }
         Main.ress[number] = tmp;
 
-    }
-
-    public static Pair sumPairs(Pair p1, Pair p2) {
-        Pair tmp = new Pair(0, 0);
-        tmp.a = p1.a * p2.a;
-        tmp.b = p2.a * p1.b + p2.b;
-        return tmp;
     }
 }
