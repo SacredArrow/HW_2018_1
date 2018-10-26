@@ -41,7 +41,7 @@ public class RunCarries implements Runnable {
 
         }
         Main.prefixes[from/Main.step] = carry_sum;
-        synchronized (Main.prefixes) {
+        synchronized (Main.sync) {
             Main.countedPrefixes++;
             if (Main.countedPrefixes == Main.numberOfThreads) {
                 Tree head = new Tree(1, Main.numberOfThreads);
@@ -51,10 +51,10 @@ public class RunCarries implements Runnable {
                 head.downsweep(Carry.M);
 //                System.out.println(head.toString());
                 Main.countedPrefixes = 0;
-                Main.prefixes.notifyAll();
+                Main.sync.notifyAll();
             } else {
                 try {
-                    Main.prefixes.wait();
+                    Main.sync.wait();
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -72,13 +72,13 @@ public class RunCarries implements Runnable {
         for (int i = from + 1; i < to; i++) {
             carries[i] = getCarry_sum(carries[i - 1], carries[i]);
         }
-        synchronized (Main.prefixes) {
+        synchronized (Main.sync) {
             Main.countedPrefixes++;
             if (Main.countedPrefixes == Main.numberOfThreads) {
-                Main.prefixes.notifyAll();
+                Main.sync.notifyAll();
             } else {
                 try {
-                    Main.prefixes.wait();
+                    Main.sync.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -9,6 +9,7 @@ public class Main {
     public static volatile Carry[] prefixes;
     static volatile Carry[] carries;
     static volatile int countedPrefixes;
+    public static final Object sync = new Object();
     static int step;
     static volatile int[] result;
     public static void test () throws InterruptedException {

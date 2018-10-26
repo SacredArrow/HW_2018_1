@@ -8,13 +8,16 @@ public class Main {
     public static volatile Carry[] prefixes;
     static volatile Carry[] carries;
     static volatile int countedPrefixes;
+    public static final Object sync = new Object();
     static int step;
     static volatile int[] result;
 
     public static void main(String[] args) throws InterruptedException {
         Scanner scanner = new Scanner(System.in);
-        String str1 = "37569867";
-        String str2 = "18913675";
+//        String str1 = "37569867";
+//        String str2 = "18913675";
+        String str1 = "99999999";
+        String str2 = "00000001";
         str1 = new StringBuilder(str1).reverse().toString();
         str2 = new StringBuilder(str2).reverse().toString();
         RunCarries[] runs = new RunCarries[numberOfThreads];
