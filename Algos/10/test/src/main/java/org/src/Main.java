@@ -1,4 +1,5 @@
 package org.src;
+import java.util.Random;
 public class Main {
     public static final Object sync = new Object();
     public static int NUMBER_OF_THREADS = 4;
@@ -9,6 +10,7 @@ public class Main {
     public static double[] angles;
     public static double[] prefixes;
     public static volatile int countedPrefixes;
+    public static Command[] commands;
 
     /*
     Algorithm:
@@ -16,12 +18,22 @@ public class Main {
     2. Correct initial data(initial + prefix angle)
     3. Simple calculation relative to X0Y(t*cos(x), t*sin(x)
      */
+
+    public static void setup(int threads, int commands_num) {
+        commands = new Command[commands_num];
+        NUMBER_OF_THREADS = threads;
+        NUMBER_OF_COMMANDS = commands_num;
+        Random r = new Random();
+        for (int i=0 ; i< commands_num;i++) {
+            commands[i] = new Command(r.nextInt(360), r.nextInt (100));
+        }
+    }
     public static void main(String[] args) {
         Thread[] threads = new Thread[NUMBER_OF_THREADS];
         prefixes = new double[NUMBER_OF_THREADS];
         ress = new Coordinates[NUMBER_OF_THREADS];
-        Command[] commands = new Command[] {new Command(45, 40), new Command(30, 50), new Command(105, 40), new Command(90, 20)};
-        NUMBER_OF_COMMANDS = commands.length;
+//        Command[] commands = new Command[] {new Command(45, 40), new Command(30, 50), new Command(105, 40), new Command(90, 20)};
+//        NUMBER_OF_COMMANDS = commands.length;
         angles = new double[NUMBER_OF_COMMANDS];
         for (int i = 0; i < NUMBER_OF_COMMANDS; i++) {
             angles[i] = commands[i].angle;

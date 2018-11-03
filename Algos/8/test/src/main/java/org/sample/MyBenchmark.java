@@ -39,25 +39,34 @@ import org.openjdk.jmh.annotations.Benchmark;
 
 @Fork(1)
 @Warmup(iterations = 1, time = 5)
-@Measurement(iterations = 2, time = 5)
+@Measurement(iterations = 4, time = 5)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
+@State(Scope.Thread)
 public class MyBenchmark {
-
+    int number_of_pairs = 10000;
     @Benchmark
-    public void testMethod() {
+    public void threads_1() {
+        Main.setup(1,number_of_pairs);
+        Main.main(new String[1]);
 
+    }
+    @Benchmark
+    public void threads_2() {
+            Main.setup(2,number_of_pairs);
             Main.main(new String[1]);
-//            int a = 10;
-//            int b = 20;
-//            int c = a + b;
 
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//
-//        }
-        //System.out.println("Finished");
-//        Main.test();
+    }
+    @Benchmark
+    public void threads_4() {
+        Main.setup(4,number_of_pairs);
+        Main.main(new String[1]);
+
+    }
+    @Benchmark
+    public void threads_8() {
+        Main.setup(8,number_of_pairs);
+        Main.main(new String[1]);
 
     }
 

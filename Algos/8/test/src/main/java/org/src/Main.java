@@ -1,4 +1,5 @@
 package org.src;
+import java.util.Random;
 public class Main {
     public static int NUMBER_OF_THREADS = 4;
     public static int NUMBER_OF_PAIRS = 4;
@@ -6,10 +7,19 @@ public class Main {
     public static volatile Pair[] ress;
     public static volatile int result;
 
+    public static void setup(int threads, int pairs_num) {
+        NUMBER_OF_THREADS = threads;
+        NUMBER_OF_PAIRS = pairs_num;
+        Random r = new Random();
+        pairs = new Pair[pairs_num];
+        for (int i = 0 ;i<pairs_num;i++) {
+            pairs[i] = new Pair(r.nextInt(100), r.nextInt(100));
+        }
+    }
     public static void main(String[] args) {
         Thread[] threads = new Thread[NUMBER_OF_THREADS];
         ress = new Pair[NUMBER_OF_THREADS];
-        pairs = new Pair[]{new Pair(0, 5), new Pair(1, 2), new Pair(3, 4), new Pair(2, 6)};
+//        pairs = new Pair[]{new Pair(0, 5), new Pair(1, 2), new Pair(3, 4), new Pair(2, 6)};
         int step = NUMBER_OF_PAIRS / NUMBER_OF_THREADS;
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
             if (i == NUMBER_OF_THREADS - 1) {
