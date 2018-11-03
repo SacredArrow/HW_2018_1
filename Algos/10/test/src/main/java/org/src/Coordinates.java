@@ -1,3 +1,4 @@
+package org.src;
 public class Coordinates {
     double x;
     double y;

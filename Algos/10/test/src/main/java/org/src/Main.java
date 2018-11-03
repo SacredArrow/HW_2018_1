@@ -1,3 +1,4 @@
+package org.src;
 public class Main {
     public static final Object sync = new Object();
     public static int NUMBER_OF_THREADS = 4;
@@ -66,7 +67,7 @@ public class Main {
         Tree tree = new Tree(1, NUMBER_OF_THREADS);
         tree.create_tree(1, NUMBER_OF_THREADS);
         result = tree.upsweep();
-        System.out.println(result); //Assuming that turtle started in (0,0)
+//        System.out.println(result); //Assuming that turtle started in (0,0)
 
 
     }

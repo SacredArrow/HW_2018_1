@@ -1,12 +1,12 @@
 package org.src;
-public class Tree {
-    Tree left;
-    Tree right;
-    Integer value;
+public class TreeAngle {
+    TreeAngle left;
+    TreeAngle right;
+    Double value;
     int left_bound;
     int right_bound;
 
-    public Tree(int left_bound, int right_bound) {
+    public TreeAngle(int left_bound, int right_bound) {
         this.left_bound = left_bound;
         this.right_bound = right_bound;
     }
@@ -14,9 +14,9 @@ public class Tree {
     @Override
     public String toString() {
         if (left != null && value != null) {
-            return ("Tree{ " + left.toString() + " " + (value != null ? value.toString() : "") + " " + right.toString() + " }");
+            return ("TreeAngle{ " + left.toString() + " " + (value != null ? value.toString() : "") + " " + right.toString() + " }");
         } else if (left != null) {
-            return ("Tree{ " + left.toString() + right.toString() + " }");
+            return ("TreeAngle{ " + left.toString() + right.toString() + " }");
         } else {
             return value.toString();
         }
@@ -27,8 +27,8 @@ public class Tree {
             this.value = Main.prefixes[left_bound - 1];
         } else {
             int middle = left_bound + (right_bound - left_bound + 1) / 2 - 1;
-            left = new Tree(left_bound, middle);
-            right = new Tree(middle + 1, right_bound);
+            left = new TreeAngle(left_bound, middle);
+            right = new TreeAngle(middle + 1, right_bound);
             Thread t1 = new Thread(() -> left.create_tree(left_bound, middle));
             t1.start();
             right.create_tree(middle + 1, right_bound);
@@ -41,15 +41,15 @@ public class Tree {
         }
     }
 
-    public int upsweep() {
+    public double upsweep() {
         if (value != null) {
             return value;
         } else {
             class Upsweep implements Runnable {
-                Tree tree;
-                Integer return_value;
+                TreeAngle tree;
+                Double return_value;
 
-                public Upsweep(Tree tree) {
+                public Upsweep(TreeAngle tree) {
                     this.tree = tree;
                 }
 
@@ -74,13 +74,13 @@ public class Tree {
         }
     }
 
-    public void downsweep(int car) {
+    public void downsweep(double car) {
         value = car;
         if (left_bound == right_bound) {
             Main.prefixes[left_bound - 1] = value;
             return;
         }
-        Integer calculated_value = value + left.value;
+        Double calculated_value = value + left.value;
         Thread t1 = new Thread(() -> left.downsweep(value));
         t1.start();
         right.downsweep(calculated_value);

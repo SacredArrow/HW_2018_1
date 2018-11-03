@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Set;
-
 public class Main {
     public static int sizeOfANumber = 8;
     public static int numberOfThreads = 4;
@@ -13,7 +9,6 @@ public class Main {
     static volatile int[] result;
 
     public static void main(String[] args) throws InterruptedException {
-        Scanner scanner = new Scanner(System.in);
 //        String str1 = "37569867";
 //        String str2 = "18913675";
         String str1 = "99999999";
@@ -48,20 +43,8 @@ public class Main {
             threads[i].join();
         }
 
-//        for (int i = 0; i < Main.sizeOfANumber; i++) {
-//            System.out.print(Main.carries[i]);
-//        }
-//        System.out.println();
         for (int i = sizeOfANumber - 1; i >= 0; i--) {
             System.out.print(result[i]);
         }
-//        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-//        for (Thread t : threadSet) {
-//            t.stop();
-//        }
-//        System.out.println();
-//        for (int i = 0; i < Main.numberOfThreads; i++) {
-//            System.out.print(Main.prefixes.get(i));
-//        }
     }
 }

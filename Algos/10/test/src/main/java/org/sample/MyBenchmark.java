@@ -46,13 +46,8 @@ public class MyBenchmark {
 
     @Benchmark
     public void testMethod() {
-        try {
-             Main.test();
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        }
+        Main.main(new String[1]);
 
     }
 

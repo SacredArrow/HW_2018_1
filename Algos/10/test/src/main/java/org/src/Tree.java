@@ -1,30 +1,19 @@
 package org.src;
 public class Tree {
-    Tree left;
-    Tree right;
-    Integer value;
     int left_bound;
     int right_bound;
+    Tree left;
+    Tree right;
+    Coordinates value;
 
     public Tree(int left_bound, int right_bound) {
         this.left_bound = left_bound;
         this.right_bound = right_bound;
     }
 
-    @Override
-    public String toString() {
-        if (left != null && value != null) {
-            return ("Tree{ " + left.toString() + " " + (value != null ? value.toString() : "") + " " + right.toString() + " }");
-        } else if (left != null) {
-            return ("Tree{ " + left.toString() + right.toString() + " }");
-        } else {
-            return value.toString();
-        }
-    }
-
     public void create_tree(int left_bound, int right_bound) {
         if (left_bound == right_bound) {
-            this.value = Main.prefixes[left_bound - 1];
+            this.value = Main.ress[left_bound - 1];
         } else {
             int middle = left_bound + (right_bound - left_bound + 1) / 2 - 1;
             left = new Tree(left_bound, middle);
@@ -41,13 +30,13 @@ public class Tree {
         }
     }
 
-    public int upsweep() {
+    public Coordinates upsweep() {
         if (value != null) {
             return value;
         } else {
             class Upsweep implements Runnable {
                 Tree tree;
-                Integer return_value;
+                Coordinates return_value;
 
                 public Upsweep(Tree tree) {
                     this.tree = tree;
@@ -69,26 +58,11 @@ public class Tree {
                 e.printStackTrace();
             }
 
-            value = run1.return_value + run2.return_value;
+            value = Run.sumPairs(run1.return_value, run2.return_value);
             return value;
         }
     }
 
-    public void downsweep(int car) {
-        value = car;
-        if (left_bound == right_bound) {
-            Main.prefixes[left_bound - 1] = value;
-            return;
-        }
-        Integer calculated_value = value + left.value;
-        Thread t1 = new Thread(() -> left.downsweep(value));
-        t1.start();
-        right.downsweep(calculated_value);
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
 }
+
+

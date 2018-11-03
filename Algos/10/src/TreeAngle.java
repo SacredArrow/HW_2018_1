@@ -29,12 +29,10 @@ public class TreeAngle {
             left = new TreeAngle(left_bound, middle);
             right = new TreeAngle(middle + 1, right_bound);
             Thread t1 = new Thread(() -> left.create_tree(left_bound, middle));
-            Thread t2 = new Thread(() -> right.create_tree(middle + 1, right_bound));
             t1.start();
-            t2.start();
+            right.create_tree(middle + 1, right_bound);
             try {
                 t1.join();
-                t2.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -62,12 +60,10 @@ public class TreeAngle {
             Upsweep run1 = new Upsweep(left);
             Upsweep run2 = new Upsweep(right);
             Thread t1 = new Thread(run1);
-            Thread t2 = new Thread(run2);
             t1.start();
-            t2.start();
+            run2.run();
             try {
                 t1.join();
-                t2.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -85,12 +81,10 @@ public class TreeAngle {
         }
         Double calculated_value = value + left.value;
         Thread t1 = new Thread(() -> left.downsweep(value));
-        Thread t2 = new Thread(() -> right.downsweep(calculated_value));
         t1.start();
-        t2.start();
+        right.downsweep(calculated_value);
         try {
             t1.join();
-            t2.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

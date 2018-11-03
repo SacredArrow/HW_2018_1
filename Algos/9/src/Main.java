@@ -51,8 +51,5 @@ public class Main {
         }
         System.out.println("Brackets match!");
         exit(0);
-
-
-//        System.out.println(intArray.);
     }
 }

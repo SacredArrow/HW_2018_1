@@ -1,8 +1,5 @@
 package org.src;
-import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Random;
-import java.util.Set;
 public class Main {
     public static int sizeOfANumber = 1024;
     public static int numberOfThreads = 4;
@@ -49,26 +46,8 @@ public class Main {
         for (int i = 0; i < numberOfThreads; i++) {
             threads[i].join();
         }
-
-//        for (int i = 0; i < Main.sizeOfANumber; i++) {
-//            System.out.print(Main.carries[i]);
-//        }
-//        System.out.println();
-//        for (int i = sizeOfANumber - 1; i >= 0; i--) {
-//            System.out.print(result[i]);
-//        }
-//        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-//        for (Thread t : threadSet) {
-//            t.interrupt();
-//        }
-//        Main.prefixes.notifyAll();
         System.out.println("Finished");
         return;
-//        System.out.println();
-//        for (int i = 0; i < Main.numberOfThreads; i++) {
-//            System.out.print(Main.prefixes.get(i));
-//        }
-//        return;
     }
     public static void main(String[] args) throws InterruptedException {
     test();

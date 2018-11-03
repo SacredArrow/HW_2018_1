@@ -46,9 +46,7 @@ public class RunCarries implements Runnable {
                 Tree head = new Tree(1, Main.numberOfThreads);
                 head.create_tree(Main.prefixes, 1, Main.numberOfThreads);
                 head.upsweep();
-//                System.out.println(head.toString());
                 head.downsweep(Carry.M);
-//                System.out.println(head.toString());
                 Main.countedPrefixes = 0;
                 Main.sync.notifyAll();
             } else {
