@@ -44,7 +44,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 public class MyBenchmark {
-    int sizeOfAString = 10000;
+    int sizeOfAString = 100000000;
     @Benchmark
     public void thread_1() {
         Main.setup(1, sizeOfAString);
