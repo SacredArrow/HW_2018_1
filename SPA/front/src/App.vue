@@ -39,14 +39,14 @@ a {
 
         </label>
 
-        <button v-on:click="submitFile()">Submit</button>
+        <button v-on:click="submitFile()" v-bind:disabled="inWork">Submit</button>
         <select v-model="selected">
             <option disabled value="">Выберите один из вариантов</option>
             <option>White/Black filter</option>
             <option>Blur filter</option>
             <option>Negative filter</option>
         </select>
-        <button v-on:click="processFile();runWebSocket()">Process</button>
+        <button v-on:click="processFile();runWebSocket()" v-bind:disabled="inWork">Process</button>
     </div>
     <progress class="progress" v-bind:value="progress" max="100">{{progress}}%</progress>
     <img v-bind:src="imagePreview" v-show="showPreview" />
@@ -68,7 +68,8 @@ export default {
             url: 'http://localhost:8000',
             urlws: 'ws://localhost:8000',
             progress: 0,
-            selected: ''
+            selected: '',
+            inWork: false
         }
     },
 
@@ -138,6 +139,7 @@ export default {
                     });
             },
             processFile() {
+              this.inWork = true;
                 axios.get(this.url + '/file', {
                         params: {
                             filter: this.selected
@@ -147,6 +149,7 @@ export default {
                         console.log(response);
                         // this.imagePreview = "data:image/png;base64," + response.data;
                         this.imagePreview = response.data;
+                        this.inWork = false;
                         console.log("got");
                     })
                     .catch((error) => (console.log(error)));
