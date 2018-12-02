@@ -15,14 +15,11 @@ public class SaveTask implements Runnable {
     public void run() {
         System.out.println("Saving " + doc.location());
         BufferedWriter writer = null;
-        try
-        {
-            writer = new BufferedWriter( new FileWriter("res/"+doc.location().replace('/',' ').replace(':', ' ')+".html"));
+        try {
+            writer = new BufferedWriter(new FileWriter("res/" + doc.location().replace('/', ' ').replace(':', ' ') + ".html"));
             writer.write(doc.toString());
 
-        }
-        catch ( IOException e)
-        {
+        } catch (IOException e) {
         } finally {
             try {
                 writer.close();

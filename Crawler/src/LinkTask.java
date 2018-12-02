@@ -1,13 +1,12 @@
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-public class LinkTask implements Runnable{
+public class LinkTask implements Runnable {
     String addr;
     int depth;
 
@@ -32,15 +31,14 @@ public class LinkTask implements Runnable{
         if (depth < Main.max_depth) {
             for (Element link : links) {
                 String url = link.attr("abs:href");
-                if (!Main.urls.contains(url)) {
-                    Main.urls.add(url);
+                if (! Main.urls.contains(url)) {
+                    Main.urls.offer(url);
                     Main.pool.execute(new LinkTask(url, depth + 1));
                 } else {
 //                    System.out.println("Url "+url+ " already processed");
                 }
             }
         }
-        System.out.println(Main.pool.getActiveCount());
         Main.pool.execute(new SaveTask(doc));
     }
 
