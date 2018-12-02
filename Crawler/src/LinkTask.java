@@ -23,8 +23,7 @@ public class LinkTask implements Runnable{
             Connection a = Jsoup.connect(addr);
             doc = a.get();
         } catch (IOException e) {
-            System.out.println("Bad myme type");
-            System.out.println(Main.pool.getActiveCount());
+//            System.out.println("Bad myme type");
             return;
         }
         System.out.println(doc.location());
@@ -37,10 +36,11 @@ public class LinkTask implements Runnable{
                     Main.urls.add(url);
                     Main.pool.execute(new LinkTask(url, depth + 1));
                 } else {
-                    System.out.println("Url "+url+ " already processed");
+//                    System.out.println("Url "+url+ " already processed");
                 }
             }
         }
+        System.out.println(Main.pool.getActiveCount());
         Main.pool.execute(new SaveTask(doc));
     }
 
