@@ -3,7 +3,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Main {
-    static int number_of_threads = 4;
+    static int number_of_threads = 1;
     static MyThreadPool pool;
     static int max_depth = 2;
     static MyConcurrentQueue<String> urls = new MyConcurrentQueue<>();

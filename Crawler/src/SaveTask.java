@@ -27,8 +27,6 @@ public class SaveTask implements Runnable {
                 e.printStackTrace();
             }
         }
-        if (Main.pool.getActiveCount() == 1) {
-            Main.pool.shutdown();
-        }
+
     }
 }

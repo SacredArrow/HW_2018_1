@@ -1,5 +1,7 @@
 import java.util.Queue;
 import java.util.concurrent.Executor;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MyThreadPool implements Executor {
     Thread[] threads;
@@ -7,6 +9,7 @@ public class MyThreadPool implements Executor {
     int number_of_threads;
     volatile boolean isRunning;
     private MyConcurrentQueue<Runnable> q;
+    private Lock lock = new ReentrantLock();
 
     public MyThreadPool(int number_of_threads, MyConcurrentQueue<Runnable> q) {
         this.number_of_threads = number_of_threads;
@@ -53,7 +56,12 @@ public class MyThreadPool implements Executor {
                 if (elem != null) {
                     isActive = true;
                     elem.run();
+                    lock.lock();
+                    if (Main.pool.getActiveCount() == 1 && q.isEmpty()) {
+                        Main.pool.shutdown();
+                    }
                     isActive = false;
+                    lock.unlock();
                 }
             }
         }
