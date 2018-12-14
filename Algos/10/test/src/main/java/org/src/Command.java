@@ -1,7 +1,7 @@
 package org.src;
 public class Command {
-    double angle;
-    double length;
+    public double angle;
+    public double length;
 
     public Command(double angle, double length) {
         this.angle = angle;

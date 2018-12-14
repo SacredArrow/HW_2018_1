@@ -34,6 +34,7 @@ package org.sample;
 import org.openjdk.jmh.annotations.*;
 import org.src.Main;
 import java.util.concurrent.TimeUnit;
+import org.src.Command;
 
 import org.openjdk.jmh.annotations.Benchmark;
 
@@ -64,6 +65,17 @@ public class MyBenchmark {
     public void thread_8() {
         Main.setup(8, number_of_commands);
         Main.main(new String[1]);
+    }
+    @Benchmark
+    public void one_threaded_version() {
+        Main.setup(1, number_of_commands);
+        Command[] commands = Main.commands;
+        int cur_pos_x = 0;
+        int cur_pos_y = 0;
+        for (Command c : commands) {
+            cur_pos_x += c.length * Math.cos(c.angle);
+            cur_pos_y += c.length * Math.sin(c.angle);
+        }
     }
 
 }
