@@ -69,5 +69,21 @@ public class MyBenchmark {
         Main.main(new String[1]);
 
     }
+    @Benchmark
+    public void one_threaded() {
+        Main.setup(1, sizeOfAString);
+        int[] arr = Main.intArray;
+        int sum=0;
+        boolean flag = true;
+        for (int i = 0;i < arr.length;i++) {
+           sum+=arr[i];
+           if (sum<0) {
+               flag=false;
+           }
+        }
+        if (sum != 0) {
+            flag = false;
+        }
+    }
 
 }
