@@ -2,14 +2,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MyConcurrentQueue<T> {
-    private class Node<T> {
-        Node<T> next;
-        T value;
-
-        public Node(T value) {
-            this.value = value;
-        }
-    }
     Node<T> head;
     Node<T> tail;
     Lock lock = new ReentrantLock();
@@ -19,7 +11,7 @@ public class MyConcurrentQueue<T> {
         Node<T> node = new Node<>(elem);
         if (head == null) {
             head = node;
-            tail=node;
+            tail = node;
         } else {
             tail.next = node;
             tail = node;
@@ -47,7 +39,7 @@ public class MyConcurrentQueue<T> {
 
     public boolean contains(T obj) {
         Node<T> tmp = head;
-        while (tmp!=null) {
+        while (tmp != null) {
             if (obj.equals(tmp.value)) {
                 return true;
             }
@@ -56,7 +48,17 @@ public class MyConcurrentQueue<T> {
         return false;
 
     }
+
     public boolean isEmpty() {
         return head == null;
+    }
+
+    private class Node<T> {
+        Node<T> next;
+        T value;
+
+        public Node(T value) {
+            this.value = value;
+        }
     }
 }

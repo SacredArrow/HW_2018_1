@@ -31,7 +31,12 @@ public class LinkTask implements Runnable {
         if (depth < Main.max_depth) {
             for (Element link : links) {
                 String url = link.attr("abs:href");
-                if (! Main.urls.contains(url)) {
+//                Операция добавления в список пройденных не атомарна, так как вероятность
+//                случая, когда в очередь будут добавлены несколько скачиваний, крайне мала,
+//                а также не сделает ничего плохого(всего лишь одна страница будет скачана 2 раза).
+//                Операция checkAndAdd, которая добавлят элемент, если его нет в списке, не логична -
+//                Операция проверки на равенство двух элементов нужна только при добавлении строк(а не задач).
+                if (!Main.urls.contains(url)) {
                     Main.urls.offer(url);
                     Main.pool.execute(new LinkTask(url, depth + 1));
                 } else {
