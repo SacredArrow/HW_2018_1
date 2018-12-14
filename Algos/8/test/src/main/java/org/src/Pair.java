@@ -1,7 +1,7 @@
 package org.src;
 public class Pair {
-    int a;
-    int b;
+    public int a;
+    public int b;
 
     public Pair(int a, int b) {
         this.a = a;

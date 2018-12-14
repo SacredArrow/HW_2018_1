@@ -33,6 +33,7 @@ package org.sample;
 
 import org.openjdk.jmh.annotations.*;
 import org.src.Main;
+import org.src.Pair;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -68,6 +69,15 @@ public class MyBenchmark {
         Main.setup(8,number_of_pairs);
         Main.main(new String[1]);
 
+    }
+    @Benchmark
+    public void one_thread_version() {
+        Main.setup(1, number_of_pairs);
+        Pair[] pairs = Main.pairs;
+        int curr=pairs[0].b;
+        for (int i = 1; i<pairs.length; i++) {
+            curr = pairs[i].a * curr + pairs[i].b;
+        }
     }
 
 }
