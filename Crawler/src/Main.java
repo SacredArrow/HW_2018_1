@@ -16,6 +16,5 @@ public class Main {
         pool = new MyThreadPool(number_of_threads, new MyConcurrentQueue<>());
         LinkTask task = new LinkTask(addr, 1);
         pool.execute(task);
-
     }
 }
