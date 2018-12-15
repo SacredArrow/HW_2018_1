@@ -166,7 +166,7 @@ public class EmbeddedAsyncServlet extends HttpServlet {
             System.err.println("Do opt");
 //                    try {
             resp.setHeader("Access-Control-Allow-Origin", "*");
-            resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+            resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Origin, access-control-allow-origin");
             resp.setContentType("text/plain");
             ctxt.complete();
         });

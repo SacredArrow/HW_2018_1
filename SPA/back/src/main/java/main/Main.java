@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import servlets.EmbeddedAsyncServlet;
+import servlets.ListOfFiltersServlet;
 import servlets.WebSocketChatServlet;
 
 import java.io.File;
@@ -24,6 +25,7 @@ public class Main {
 
         context2.addServlet(new ServletHolder(new WebSocketChatServlet()), "/chat");
         context2.addServlet(new ServletHolder(new EmbeddedAsyncServlet()), "/file");
+        context2.addServlet(new ServletHolder(new ListOfFiltersServlet()), "/filters");
         server.setHandler(context2);
         server.start();
         server.join();

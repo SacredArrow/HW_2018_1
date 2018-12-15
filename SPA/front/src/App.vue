@@ -42,9 +42,7 @@ a {
         <button v-on:click="submitFile()" v-bind:disabled="inWork">Submit</button>
         <select v-model="selected">
             <option disabled value="">Выберите один из вариантов</option>
-            <option>White/Black filter</option>
-            <option>Blur filter</option>
-            <option>Negative filter</option>
+            <option v-for="filter in filters">{{filter}}</option>
         </select>
         <button v-on:click="processFile();runWebSocket()" v-bind:disabled="inWork">Process</button>
     </div>
@@ -71,7 +69,8 @@ export default {
             selected: '',
             inWork: false,
             id: '',
-            op: 'filter'
+            op: 'filter',
+            filters: []
         }
     },
     computed: {
@@ -196,6 +195,20 @@ export default {
                     alert("Connection is closed...");
                 };
             }
+    },
+    beforeMount() {
+      var that = this;
+      axios.get(this.url + '/filters', {
+          })
+          .then(response => {
+              console.log(response);
+              that.filters = response.data.split(/\r?\n/);
+              that.filters.splice(-1,1);
+              // this.imagePreview = "data:image/png;base64," + response.data;
+
+
+          })
+          .catch((error) => (console.log(error)));
     }
 
 }
