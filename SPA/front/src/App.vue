@@ -45,6 +45,7 @@ a {
             <option v-for="filter in filters">{{filter}}</option>
         </select>
         <button v-on:click="processFile();runWebSocket()" v-bind:disabled="inWork">Process</button>
+        <button v-on:click="runTest()">Test</button>
     </div>
     <progress class="progress" v-bind:value="progress" max="100">{{progress}}%</progress>
     <img v-bind:src="imagePreview" v-show="showPreview" />
@@ -70,7 +71,9 @@ export default {
             inWork: false,
             id: '',
             op: 'filter',
-            filters: []
+            filters: [],
+            start_time: 0,
+            run_time: 0
         }
     },
     computed: {
@@ -80,6 +83,20 @@ export default {
     },
 
     methods: {
+      runTest() {
+        var start = new Date().getTime();
+        this.start_time = start;
+        for ( var i =0; i<30;i++) {
+        this.submitFile();
+          console.log("here");
+          setTimeout(() => {this.runWebSocket();
+          console.log("here2");
+          this.processFile();
+        }, 1000);
+      }
+
+
+      },
         handleFileUpload() {
                 /*
                   Set the local file variable to what the user has selected.
@@ -165,6 +182,8 @@ export default {
                           this.inWork = false;
                           this.op = 'filter';
                           console.log("got");
+                          var date = new Date();
+                          this.run_time = date.getTime() - this.start_time;
                         }
 
                     })
