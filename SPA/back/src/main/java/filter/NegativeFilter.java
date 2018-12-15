@@ -56,7 +56,10 @@ public class NegativeFilter implements Filter {
                 if (cntr == width * height / 100) {
                     cntr = 0;
                     lock.lock();
-                    EmbeddedAsyncServlet.map.put(id, EmbeddedAsyncServlet.map.get(id) + 1);
+                    int res = EmbeddedAsyncServlet.map.get(id) + 1;
+                    if (res != 100) {
+                        EmbeddedAsyncServlet.map.put(id, res);
+                    }
                     lock.unlock();
                 }
             }
@@ -64,6 +67,7 @@ public class NegativeFilter implements Filter {
         //write image
         try {
             ImageIO.write(img, format, file);
+            EmbeddedAsyncServlet.map.put(id, 100);
         } catch (
                 IOException e) {
             System.out.println(e);

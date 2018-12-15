@@ -70,7 +70,8 @@ export default {
             progress: 0,
             selected: '',
             inWork: false,
-            id: ''
+            id: '',
+            op: 'filter'
         }
     },
     computed: {
@@ -151,6 +152,7 @@ export default {
               this.inWork = true;
                 axios.get(this.url + '/file', {
                         params: {
+                            op: this.op,
                             filter: this.selected,
                             id: this.id,
                             format: this.format
@@ -159,9 +161,13 @@ export default {
                     .then(response => {
                         console.log(response);
                         // this.imagePreview = "data:image/png;base64," + response.data;
-                        this.imagePreview = response.data;
-                        this.inWork = false;
-                        console.log("got");
+                        if (this.op != 'filter') {
+                          this.imagePreview = response.data;
+                          this.inWork = false;
+                          this.op = 'filter';
+                          console.log("got");
+                        }
+
                     })
                     .catch((error) => (console.log(error)));
             },
@@ -178,6 +184,11 @@ export default {
                 ws.onmessage = function(evt) {
                     that.progress = evt.data;
                     console.log(that.progress);
+                    if (that.progress == "100") {
+                      that.op = "get";
+                      that.processFile();
+
+                    }
                     // alert("Message is received...");
                 };
                 ws.onclose = function() {

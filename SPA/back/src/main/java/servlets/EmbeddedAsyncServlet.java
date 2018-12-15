@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.TimeUnit;
 
 //@WebServlet (name = "EmbeddedAsyncServlet", urlPatterns = {"/file"})
 public class EmbeddedAsyncServlet extends HttpServlet {
@@ -40,6 +41,7 @@ public class EmbeddedAsyncServlet extends HttpServlet {
         return b.toByteArray();
     }
 
+
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         final AsyncContext ctxt = req.startAsync();
@@ -48,34 +50,45 @@ public class EmbeddedAsyncServlet extends HttpServlet {
             String get = req.getParameter("UUID");
             try {
                 try {
-                    String filter_name = req.getParameter("filter");
-                    String id = req.getParameter("id");
-                    String format = req.getParameter("format");
-                    map.put(id, 0);
-                    System.out.println(filter_name);
-                    String file_name = "res/" +id+"."+ format;
-                    System.out.println(file_name);
-                    File file = new File(file_name);
-                    Filter filter = null;
-                    switch (filter_name) {
-                        case "Negative filter" : filter = new NegativeFilter(file, id, format);
-                        break;
-                        case "White/Black filter" : filter = new BlackWhiteFilter(file, id, format);
-                        break;
-                        case "Blur filter" : filter = new BlurFilter(file, id, format);
-                        break;
-                    }
-                    filter.process();
-                    FileInputStream fileInputStreamReader = new FileInputStream(file);
-                    byte[] bytes = new byte[(int) file.length()];
-                    fileInputStreamReader.read(bytes);
-                    String encodedfile = new String(Base64.encodeBase64(bytes), "UTF-8");
-                    encodedfile = "data:image/" + format + ";base64," + encodedfile;
                     resp.setContentType("text/plain");
                     resp.setHeader("Access-Control-Allow-Origin", "*");
+                    String op = req.getParameter("op");
+                    String id = req.getParameter("id");
+                    String format = req.getParameter("format");
+                    String file_name = "res/" + id + "." + format;
+                    System.out.println(file_name);
+                    File file = new File(file_name);
+                    if (op.equals("filter")) {
+                        String filter_name = req.getParameter("filter");
+
+                        map.put(id, 0);
+                        System.out.println(filter_name);
+
+                        Filter filter = null;
+                        switch (filter_name) {
+                            case "Negative filter":
+                                filter = new NegativeFilter(file, id, format);
+                                break;
+                            case "White/Black filter":
+                                filter = new BlackWhiteFilter(file, id, format);
+                                break;
+                            case "Blur filter":
+                                filter = new BlurFilter(file, id, format);
+                                break;
+                        }
+                        System.out.println("Filter started");
+                        filter.process();
+                    } else {
+                        FileInputStream fileInputStreamReader = new FileInputStream(file);
+                        byte[] bytes = new byte[(int) file.length()];
+                        fileInputStreamReader.read(bytes);
+                        String encodedfile = new String(Base64.encodeBase64(bytes), "UTF-8");
+                        encodedfile = "data:image/" + format + ";base64," + encodedfile;
+
 //                                resp.setHeader("Content-Type", "text/plain");
 
-                    resp.getWriter().append(encodedfile);
+                        resp.getWriter().append(encodedfile);
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -84,6 +97,7 @@ public class EmbeddedAsyncServlet extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             ctxt.complete();
         });
     }

@@ -32,9 +32,9 @@ public class BlackWhiteFilter implements Filter{
             Graphics2D graphic = result.createGraphics();
             graphic.drawImage(image, 0, 0, Color.WHITE, null);
             graphic.dispose();
-            EmbeddedAsyncServlet.map.put(id, 100);
-            ImageIO.write(result, format, file);
 
+            ImageIO.write(result, format, file);
+            EmbeddedAsyncServlet.map.put(id, 100);
         } catch (IOException e) {
             e.printStackTrace();
         }

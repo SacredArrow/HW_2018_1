@@ -55,7 +55,10 @@ public class BlurFilter implements Filter {
                         processLine(mode, local_counter);
                         lock.lock();
                         progress += 100.0/maxIndex;
-                        EmbeddedAsyncServlet.map.put(id, (int)progress);
+                        if (progress<100) {
+                            EmbeddedAsyncServlet.map.put(id, (int) progress);
+                        }
+//                        System.out.println("Update " + id+" " + progress);
                         lock.unlock();
                         local_counter = lineCounter.getAndIncrement();
                     }

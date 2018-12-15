@@ -19,14 +19,19 @@ public class ChatWebSocket {
     public void onOpen(Session session)  {
         this.session = session;
 //        sendString("hello there");
-//        System.out.println("Socket started");
+        System.out.println("Socket started");
 
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) throws InterruptedException {
+        while (session == null){TimeUnit.MILLISECONDS.sleep(100);}
         this.id = data;
-        int progress;
+        System.out.println(data);
+        Integer progress = null;
+        while (progress == null) {
+            progress = EmbeddedAsyncServlet.map.get(id);
+        }
         do {
             progress = EmbeddedAsyncServlet.map.get(id);
             sendString(Integer.toString(progress));
@@ -40,7 +45,7 @@ public class ChatWebSocket {
     public void onClose(int statusCode, String reason) {
     }
 
-    public void sendString(String data) {
+    private void sendString(String data) {
         try {
             session.getRemote().sendString(data);
         } catch (Exception e) {
