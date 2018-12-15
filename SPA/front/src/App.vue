@@ -69,7 +69,8 @@ export default {
             urlws: 'ws://localhost:8000',
             progress: 0,
             selected: '',
-            inWork: false
+            inWork: false,
+            id: ''
         }
     },
 
@@ -125,24 +126,28 @@ export default {
                 /*
                   Make the request to the POST /single-file URL
                 */
+                var that = this;
                 axios.post(this.url + '/file',
                         formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
                         }
-                    ).then(function() {
-                        console.log('SUCCESS!!');
+                    ).then(function(response) {
+                        console.log(response.data);
+                        that.id = response.data;
+
                     })
-                    .catch(function() {
-                        console.log('FAILURE!!');
+                    .catch(function(error) {
+                        console.log(error);
                     });
             },
             processFile() {
               this.inWork = true;
                 axios.get(this.url + '/file', {
                         params: {
-                            filter: this.selected
+                            filter: this.selected,
+                            id: this.id
                         }
                     })
                     .then(response => {

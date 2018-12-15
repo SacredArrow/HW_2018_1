@@ -23,8 +23,8 @@ import java.util.List;
 //@WebServlet (name = "EmbeddedAsyncServlet", urlPatterns = {"/file"})
 public class EmbeddedAsyncServlet extends HttpServlet {
     public static volatile double progress;
-    private String filter_name;
     public static String format;
+
 
     public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream b = new ByteArrayInputStream(bytes);
@@ -48,9 +48,12 @@ public class EmbeddedAsyncServlet extends HttpServlet {
             try {
                 try {
                     progress = 0;
-                    filter_name = req.getParameter("filter");
+                    String filter_name = req.getParameter("filter");
+                    String id = req.getParameter("id");
                     System.out.println(filter_name);
-                    File file = new File("res/image." + format);
+                    String file_name = "res/" +id+"."+ format;
+                    System.out.println(file_name);
+                    File file = new File(file_name);
                     Filter filter = null;
                     switch (filter_name) {
                         case "Negative filter" : filter = new NegativeFilter(file);
@@ -108,13 +111,17 @@ public class EmbeddedAsyncServlet extends HttpServlet {
             e.printStackTrace();
         }
         Iterator<FileItem> iter = items.iterator();
+        String sessionID = "";
         while (iter.hasNext()) {
             FileItem item = iter.next();
 
             if (! item.isFormField()) {
                 String name = item.getName();
                 format = name.substring(name.indexOf('.') + 1);
-                File uploadedFile = new File("res/image." + format);
+                sessionID = req.getSession().getId();
+                String file_name = "res/" +sessionID+"."+ format;
+                System.out.println(file_name);
+                File uploadedFile = new File(file_name);
                 try {
                     item.write(uploadedFile);
                 } catch (Exception e) {
@@ -122,6 +129,7 @@ public class EmbeddedAsyncServlet extends HttpServlet {
                 }
             }
         }
+        resp.getWriter().append(sessionID);
 
     }
 
