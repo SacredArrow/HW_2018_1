@@ -19,11 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 //@WebServlet (name = "EmbeddedAsyncServlet", urlPatterns = {"/file"})
 public class EmbeddedAsyncServlet extends HttpServlet {
-    public static volatile double progress;
-    public static String format;
+    public static ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
 
 
     public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
@@ -47,20 +48,21 @@ public class EmbeddedAsyncServlet extends HttpServlet {
             String get = req.getParameter("UUID");
             try {
                 try {
-                    progress = 0;
                     String filter_name = req.getParameter("filter");
                     String id = req.getParameter("id");
+                    String format = req.getParameter("format");
+                    map.put(id, 0);
                     System.out.println(filter_name);
                     String file_name = "res/" +id+"."+ format;
                     System.out.println(file_name);
                     File file = new File(file_name);
                     Filter filter = null;
                     switch (filter_name) {
-                        case "Negative filter" : filter = new NegativeFilter(file);
+                        case "Negative filter" : filter = new NegativeFilter(file, id, format);
                         break;
-                        case "White/Black filter" : filter = new BlackWhiteFilter(file);
+                        case "White/Black filter" : filter = new BlackWhiteFilter(file, id, format);
                         break;
-                        case "Blur filter" : filter = new BlurFilter(file);
+                        case "Blur filter" : filter = new BlurFilter(file, id, format);
                         break;
                     }
                     filter.process();
@@ -88,48 +90,57 @@ public class EmbeddedAsyncServlet extends HttpServlet {
 
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        final AsyncContext ctxt = req.startAsync();
 
-        System.err.println("Do post");
+        ctxt.start(() -> {
+            System.err.println("Do post");
 //                    try {
-        resp.setHeader("Access-Control-Allow-Origin", "*");
-        // Create a factory for disk-based file items
-        DiskFileItemFactory factory = new DiskFileItemFactory();
+            resp.setHeader("Access-Control-Allow-Origin", "*");
+            // Create a factory for disk-based file items
+            DiskFileItemFactory factory = new DiskFileItemFactory();
 
 // Configure a repository (to ensure a secure temp location is used)
-        ServletContext servletContext = this.getServletConfig().getServletContext();
-        File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-        factory.setRepository(repository);
+            ServletContext servletContext = this.getServletConfig().getServletContext();
+            File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+            factory.setRepository(repository);
 
 // Create a new file upload handler
-        ServletFileUpload upload = new ServletFileUpload(factory);
+            ServletFileUpload upload = new ServletFileUpload(factory);
 
 // Parse the request
-        List<FileItem> items = null;
-        try {
-            items = upload.parseRequest(req);
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-        }
-        Iterator<FileItem> iter = items.iterator();
-        String sessionID = "";
-        while (iter.hasNext()) {
-            FileItem item = iter.next();
+            List<FileItem> items = null;
+            try {
+                items = upload.parseRequest(req);
+            } catch (FileUploadException e) {
+                e.printStackTrace();
+            }
+            Iterator<FileItem> iter = items.iterator();
+            String sessionID = "";
+            while (iter.hasNext()) {
+                FileItem item = iter.next();
 
-            if (! item.isFormField()) {
-                String name = item.getName();
-                format = name.substring(name.indexOf('.') + 1);
-                sessionID = req.getSession().getId();
-                String file_name = "res/" +sessionID+"."+ format;
-                System.out.println(file_name);
-                File uploadedFile = new File(file_name);
-                try {
-                    item.write(uploadedFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (! item.isFormField()) {
+                    String name = item.getName();
+                    String format = name.substring(name.indexOf('.') + 1);
+                    sessionID = req.getSession().getId();
+                    String file_name = "res/" + sessionID + "." + format;
+                    System.out.println(file_name);
+                    File uploadedFile = new File(file_name);
+                    try {
+                        item.write(uploadedFile);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
-        resp.getWriter().append(sessionID);
+            try {
+                resp.getWriter().append(sessionID);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ctxt.complete();
+
+        });
 
     }
 

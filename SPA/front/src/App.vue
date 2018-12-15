@@ -73,6 +73,11 @@ export default {
             id: ''
         }
     },
+    computed: {
+      format: function() {
+        return this.fileName.split(".").reverse()[0]
+      }
+    },
 
     methods: {
         handleFileUpload() {
@@ -147,7 +152,8 @@ export default {
                 axios.get(this.url + '/file', {
                         params: {
                             filter: this.selected,
-                            id: this.id
+                            id: this.id,
+                            format: this.format
                         }
                     })
                     .then(response => {
@@ -166,6 +172,7 @@ export default {
                     // Web Socket is connected, send data using send()
                     // ws.send('Message to send');
                     // alert("Message is sent...");
+                    ws.send(that.id);
                     console.log("connection opened");
                 };
                 ws.onmessage = function(evt) {

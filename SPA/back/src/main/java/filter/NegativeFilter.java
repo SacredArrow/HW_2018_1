@@ -7,12 +7,18 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class NegativeFilter implements Filter {
     File file;
+    String id;
+    ReentrantLock lock = new ReentrantLock();
+    String format;
 
-    public NegativeFilter(File file) {
+    public NegativeFilter(File file, String id, String format) {
         this.file = file;
+        this.id=id;
+        this.format = format;
     }
 
     public void process() {
@@ -49,13 +55,15 @@ public class NegativeFilter implements Filter {
                 cntr++;
                 if (cntr == width * height / 100) {
                     cntr = 0;
-                    EmbeddedAsyncServlet.progress++;
+                    lock.lock();
+                    EmbeddedAsyncServlet.map.put(id, EmbeddedAsyncServlet.map.get(id) + 1);
+                    lock.unlock();
                 }
             }
         }
         //write image
         try {
-            ImageIO.write(img, EmbeddedAsyncServlet.format, file);
+            ImageIO.write(img, format, file);
         } catch (
                 IOException e) {
             System.out.println(e);

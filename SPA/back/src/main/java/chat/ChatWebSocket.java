@@ -13,22 +13,27 @@ import java.util.concurrent.TimeUnit;
 @WebSocket
 public class ChatWebSocket {
     private Session session;
+    private String id = "";
 
     @OnWebSocketConnect
-    public void onOpen(Session session) throws InterruptedException {
+    public void onOpen(Session session)  {
         this.session = session;
 //        sendString("hello there");
-        do {
-            sendString(Integer.toString((int)EmbeddedAsyncServlet.progress));
-            System.out.println("sent" + (int)EmbeddedAsyncServlet.progress);
-            TimeUnit.SECONDS.sleep(1);
-        } while (EmbeddedAsyncServlet.progress != 100);
-        sendString(Integer.toString((int)EmbeddedAsyncServlet.progress));
+//        System.out.println("Socket started");
+
     }
 
     @OnWebSocketMessage
-    public void onMessage(String data) {
-        sendString(data);
+    public void onMessage(String data) throws InterruptedException {
+        this.id = data;
+        int progress;
+        do {
+            progress = EmbeddedAsyncServlet.map.get(id);
+            sendString(Integer.toString(progress));
+            System.out.println("sent " + progress);
+            TimeUnit.SECONDS.sleep(1);
+        } while (progress != 100);
+        sendString(Integer.toString(100));
     }
 
     @OnWebSocketClose

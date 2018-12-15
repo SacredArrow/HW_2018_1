@@ -7,13 +7,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.jetbrains.annotations.NotNull;
 
 
 public class BlurFilter implements Filter {
     private File file;
-    public BlurFilter(File file) {
+    private String id;
+    private String format;
+    public BlurFilter(File file, String id, String format) {
         this.file=file;
+        this.id = id;
+        this.format = format;
     }
     public enum Mode {
         HORIZONTAL_PROCESSING, VERTICAL_PROCESSING;
@@ -24,23 +31,33 @@ public class BlurFilter implements Filter {
 
         private BufferedImage src;
         private BufferedImage target;
-        private volatile int lineCounter;
+        private AtomicInteger lineCounter = new AtomicInteger();
+        private double progress;
         private int maxIndex;
         private final int RADIUS = 5;
+        private ReentrantLock lock = new ReentrantLock();
+
 
         public Filter(@NotNull BufferedImage src) {
             this.src = src;
             this.target = new BufferedImage(src.getWidth(), src.getHeight(), src.getType());
+
         }
 
         public void process(int threadsNumber, Mode mode) throws InterruptedException {
-            lineCounter = 0;
+            lineCounter.set(0);
+
             Runnable run = new Runnable() {
                 @Override
                 public void run() {
-                    while (lineCounter < maxIndex) {
-                        processLine(mode, lineCounter++);
-                        EmbeddedAsyncServlet.progress+=100.0/maxIndex;
+                    int local_counter = lineCounter.getAndIncrement();
+                    while (local_counter < maxIndex) {
+                        processLine(mode, local_counter);
+                        lock.lock();
+                        progress += 100.0/maxIndex;
+                        EmbeddedAsyncServlet.map.put(id, (int)progress);
+                        lock.unlock();
+                        local_counter = lineCounter.getAndIncrement();
                     }
                 }
             };
@@ -59,7 +76,7 @@ public class BlurFilter implements Filter {
             for (int i = 0; i < threadsNumber; i++) {
                 threads[i].join();
             }
-            EmbeddedAsyncServlet.progress = 100;
+            EmbeddedAsyncServlet.map.put(id,100);
 
         }
 
@@ -96,7 +113,12 @@ public class BlurFilter implements Filter {
             int new_green = colors[1] / pixel_cntr;
             int new_blue = colors[2] / pixel_cntr;
             int new_color = getIntFromColor(new_red, new_green, new_blue);
-            target.setRGB(x, y, new_color);
+            try {
+                target.setRGB(x, y, new_color);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Exception");
+                System.out.println(x+ " "+ src.getWidth()+" "+y+" "+src.getHeight());
+            }
 
         }
 
@@ -131,7 +153,7 @@ public class BlurFilter implements Filter {
         }
         BufferedImage target = filter.getTarget();
         try {
-            ImageIO.write(target, EmbeddedAsyncServlet.format, file);
+            ImageIO.write(target, format, file);
         } catch (IOException e) {
             e.printStackTrace();
         }
